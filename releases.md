@@ -1,3 +1,6 @@
-## Release notes
+# `ptolemy` code library: release notes
 
-**1.0.0**:  initial release.  `Sexagesimal` class supports conversion of conventionally formatted strings to decimal values.
+
+**1.0.1**:  fixes a bug in parsing XML text to delimited-text format.
+
+**1.0.0**:  first usable public release.

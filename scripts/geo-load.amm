@@ -1,3 +1,9 @@
+/////// AMMONITE CONFIGURATION:
+// 1. Add maven repository where we can find our libraries
+val myBT = coursierapi.MavenRepository.of("https://dl.bintray.com/neelsmith/maven")
+interp.repositories() ++= Seq(myBT)
+import $ivy.`edu.holycross.shot::ptolemy:1.2.1`
+
 
 import scala.xml._
 import edu.holycross.shot.ptolemy._

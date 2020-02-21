@@ -22,9 +22,17 @@ case class PtolemyString (
   latFract: String
 ) {
 
+
+  def cex(delimiter: String = "#"): String = {
+    Vector(passage, continent, province, siteType, id, text, lonStr,latStr, lon, lonDeg, lonFract, lat, latDeg, latFract).mkString(delimiter)
+  }
+
   }
 
 object PtolemyString extends LogSupport {
+
+
+  val header = "passage#continent#province#siteType#id#text#lonString#latStr#lon#lonDegree#lonFraction#lat#latDegree#latFract\n"
 
   def apply(line : String) : PtolemyString = {
     val cols = line.trim.split("#")
@@ -42,7 +50,7 @@ object PtolemyString extends LogSupport {
     }
     val lat = {
       try {
-        cols(9).toDouble
+        cols(11).toDouble
       } catch {
         case t: Throwable => -1.0
       }

@@ -194,8 +194,8 @@ object TeiParser extends LogSupport {
   * @param root Parsed root of TEI document.
   */
   def parseTEI(root: scala.xml.Node, includeHeader : Boolean = true) : Vector[String] = {
-    val header = "passage#continent#province#siteType#id#text#lonString#latStr#lon#lonDegree#lonFraction#lat#latDegree#latFract\n"
 
+    // Books are in top-level TEI <div> elements.
     val books = root \ "text" \ "body" \ "div"
     // parse contents of each book to a Vector of delimited text lines:
     val bookData = for (book <- books) yield {
@@ -206,7 +206,7 @@ object TeiParser extends LogSupport {
     debug(lines.size + " non-empty lines.")
 
     if (includeHeader) {
-      header +: lines
+      PtolemyString.header +: lines
     } else {
       lines
     }

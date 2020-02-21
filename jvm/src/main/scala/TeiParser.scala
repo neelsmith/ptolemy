@@ -188,19 +188,28 @@ object TeiParser extends LogSupport {
   }
 
   /** Parse a full TEI text of the Geography, and
-  * and extract lon-lat data points to a simple
+  * extract lon-lat data points to a simple
   * delimited-text representation.
   *
   * @param root Parsed root of TEI document.
   */
-  def parseTEI(root: scala.xml.Node) = {
+  def parseTEI(root: scala.xml.Node, includeHeader : Boolean = true) : Vector[String] = {
+    val header = "passage#continent#province#siteType#id#text#lonString#latStr#lon#lonDegree#lonFraction#lat#latDegree#latFract\n"
+
     val books = root \ "text" \ "body" \ "div"
+    // parse contents of each book to a Vector of delimited text lines:
     val bookData = for (book <- books) yield {
       parseBook(book)
     }
+    // flatten the results, tidy up strings by removing empty lines:
     val lines = bookData.toVector.flatten.map(_.trim).filter(_.nonEmpty)
     debug(lines.size + " non-empty lines.")
-    lines
+
+    if (includeHeader) {
+      header +: lines
+    } else {
+      lines
+    }
   }
 
 }

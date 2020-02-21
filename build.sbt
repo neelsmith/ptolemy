@@ -12,7 +12,7 @@ lazy val crossed = crossProject.in(file(".")).
 
       name := "ptolemy",
       organization := "edu.holycross.shot",
-      version := "1.1.0",
+      version := "1.2.1",
       scalaVersion := "2.12.4",
       licenses += ("GPL-3.0",url("https://opensource.org/licenses/gpl-3.0.html")),
       resolvers += Resolver.jcenterRepo,

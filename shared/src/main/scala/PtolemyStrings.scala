@@ -15,7 +15,12 @@ case class PtolemyString (
   lonStr: String,
   latStr: String,
   lon: Double,
-  lat: Double) {
+  lonDeg: String,
+  lonFract: String,
+  lat: Double,
+  latDeg: String,
+  latFract: String
+) {
 
   }
 
@@ -25,7 +30,7 @@ object PtolemyString extends LogSupport {
     val cols = line.trim.split("#")
     if (cols.size < 10) {
       error("Two few columns in " + line)
-      PtolemyString("","","","","","","","",-1.0, -1.0)
+      PtolemyString("","","","","","","","",-1.0, "","", -1.0,  "","")
     } else {
     //println("Parsing " + cols.toVector)
     val lon = {
@@ -52,7 +57,11 @@ object PtolemyString extends LogSupport {
       cols(6),
       cols(7),
       lon,
-      lat
+      cols(9),
+      cols(10),
+      lat,
+      cols(12),
+      cols(13)
     )
   }
 }

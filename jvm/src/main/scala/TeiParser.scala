@@ -12,7 +12,7 @@ import wvlet.log.LogFormatter.SourceCodeLogFormatter
 */
 object TeiParser extends LogSupport {
 
-  Logger.setDefaultLogLevel(LogLevel.DEBUG)
+  Logger.setDefaultLogLevel(LogLevel.INFO)
 
   /** Parse a Vector of four TEI <num> elements,
   * and format the resulting lon-lat data as
@@ -23,18 +23,23 @@ object TeiParser extends LogSupport {
   def parseLonLat(nums: Vector[scala.xml.Node]): String = {
     debug("Parse nums "  + nums)
     val lonDeg = if (nums(0).text.trim.isEmpty) {""} else {
-      nums(0).text + "' "
+      nums(0).text.toLowerCase + "' "
     }
     val lonMin = if (nums(1).text.trim.isEmpty) {""} else {
-      nums(1).text + "\""
+      nums(1).text.toLowerCase + "\""
     }
     val latDeg = if (nums(2).text.trim.isEmpty) {""} else {
-      nums(2).text + "' "
+      nums(2).text.toLowerCase + "' "
     }
     val latMin = if (nums(3).text.trim.isEmpty) {""} else {
-      nums(3).text + "\""
+      nums(3).text.toLowerCase + "\""
     }
+    debug("Fraction values are #" + lonMin + "# and #" + latMin + "#")
+    debug("Make just a lon fraction:  " + MilesianWithFraction(lonMin))
+
+
     debug("lons are #" + (lonDeg +  lonMin).trim + "#")
+    debug("from #" + lonDeg + "# and #" + lonMin + "#")
     val lon = MilesianWithFraction((lonDeg + lonMin).trim)
     debug("lon " + lon)
     val lat = MilesianWithFraction((latDeg + latMin).trim)
@@ -45,7 +50,7 @@ object TeiParser extends LogSupport {
     //val lonStr = "X" // if (lon.ucode.isEmpty) { " X "} else { lon.ucode }
     //val latStr = "X"  //if (lat.ucode.isEmpty) { " X "} else { lat.ucode }
     //debug("dispaly strings " + lonStr + " : " + latStr)
-    val delimited = Vector(lonStr,latStr,lon.toDouble,lat.toDouble).mkString("#")
+    val delimited = Vector(lonStr,latStr,lon.toDouble, lon.toInt, lon.partialDouble, lat.toDouble, lat.toInt, lat.partialDouble).mkString("#")
     debug("DELIMITED: " + delimited)
     delimited
   }
@@ -182,6 +187,12 @@ object TeiParser extends LogSupport {
     chapData.flatten.toVector.map(_.trim).filter(_.nonEmpty)
   }
 
+  /** Parse a full TEI text of the Geography, and
+  * and extract lon-lat data points to a simple
+  * delimited-text representation.
+  *
+  * @param root Parsed root of TEI document.
+  */
   def parseTEI(root: scala.xml.Node) = {
     val books = root \ "text" \ "body" \ "div"
     val bookData = for (book <- books) yield {
@@ -189,9 +200,7 @@ object TeiParser extends LogSupport {
     }
     val lines = bookData.toVector.flatten.map(_.trim).filter(_.nonEmpty)
     debug(lines.size + " non-empty lines.")
-    //lines.map(PtolemyString(_))
     lines
   }
-
 
 }

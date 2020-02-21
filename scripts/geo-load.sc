@@ -1,5 +1,4 @@
 import scala.xml._
-//import edu.holycross.shot.greek._
 import edu.holycross.shot.ptolemy._
 
 val xml = "tei/tlg0363.tlg009.epist03-p5-u8.xml"

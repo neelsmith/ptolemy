@@ -6048,7 +6048,7 @@ passage	continent	province	siteType	id	text	lonStr	latStr	lon	lonDeg	lonFract	la
 7.1.90	Asia	india-within	interior-poleis	pt_ll_4920	Τάλαρα 	ρκηʹ	ιϛʹβ  δ"	128.0	128	0.0	16.75	16	0.75	78.84	22.14
 7.1.91	Asia	india-within	interior-poleis	pt_ll_4921	Καλίουρ 	ρκθʹ	ιζʹγ"	129.0	129	0.0	17.333	17	0.333	79.56	22.560000000000002
 7.1.91	Asia	india-within	interior-poleis	pt_ll_4922	Τενναγόρα 	ρλβʹ	ιζʹ	132.0	132	0.0	17.0	17	0.0	81.72	22.32
-7.1.91	Asia	india-within	interior-poleis	pt_ll_4923	Εἰκούρ 	δκθʹ	ιϛʹβ ϛ"	33.0	33	0.0	16.667	16	0.667	10.440000000000001	22.08
+7.1.91	Asia	india-within	interior-poleis	pt_ll_4923	Εἰκούρ 	ρκθʹ	ιϛʹβ ϛ"	129.0	129	0.0	16.667	16	0.667	79.56	22.08
 7.1.91	Asia	india-within	interior-poleis	pt_ll_4924	Σώρναγος 	ρλʹ	ιϛʹγ"	130.0	130	0.0	16.333	16	0.333	80.28	21.84
 7.1.91	Asia	india-within	interior-poleis	pt_ll_4925	Βέρη 	ρλʹγ"	ιϛʹδ"	130.333	130	0.333	16.25	16	0.25	80.52000000000001	21.78
 7.1.91	Asia	india-within	interior-poleis	pt_ll_4926	Ἄβουρ 	ρκθʹ	ιϛʹ	129.0	129	0.0	16.0	16	0.0	79.56	21.6

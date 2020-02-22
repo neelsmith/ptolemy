@@ -8,6 +8,13 @@ val root = XML.load(url)
 
 import edu.holycross.shot.ptolemy._
 val geo = TeiParser.geography(root)
+
 new PrintWriter("gis-raw.csv"){write(geo.rawDelimited()); close;}
 new PrintWriter("gis-scaled.csv"){write(geo.scaledDelimited()); close;}
 new PrintWriter("gis-scaled-latshifted.csv"){write(geo.scaledLatShiftedDelimited()); close;}
+new PrintWriter("gis-scaled-lonshifted.csv"){write(geo.scaledLonShiftedDelimited()); close;}
+
+
+new PrintWriter("gis-adjusted.csv"){write(geo.adjustedPointsDelimited()); close;}
+
+new PrintWriter("gis-full.tsv"){write(geo.ptolemyWithAdjustedPointDelimited("\t")); close;}

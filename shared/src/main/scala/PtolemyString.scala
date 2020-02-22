@@ -27,7 +27,7 @@ case class PtolemyString (
     SimplePoint(id, lon, lat)
   }
 
-  def cex(delimiter: String = "#"): String = {
+  def delimited(delimiter: String = "#"): String = {
     Vector(passage, continent, province, siteType, id, text, lonStr,latStr, lon, lonDeg, lonFract, lat, latDeg, latFract).mkString(delimiter)
   }
 /*

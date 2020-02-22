@@ -72,6 +72,37 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     simpleHeader(delimiter) + data
   }
 
+  def fullHeader(delimiter: String = "#"): String =  {
+    val columns = Vector(
+    "passage",
+    "continent",
+    "province",
+    "siteType",
+    "id",
+    "text",
+    "lonStr",
+    "latStr",
+    "lon",
+    "lonDeg",
+    "lonFract",
+    "lat",
+    "latDeg",
+    "latFract",
+    "adjustedLon",
+    "adjustedLat")
+    columns.mkString(delimiter) + "\n"
+  }
+
+  def ptolemyWithAdjustedPointDelimited(delimiter: String = "#") = {
+   
+    val zipped = rawData zip adjustedPoints
+
+    val textLines = zipped.map{ case (raw, adj) =>
+      raw.delimited(delimiter) + delimiter + adj.pointDelimited(delimiter)
+    }
+    fullHeader(delimiter) + textLines.mkString("\n")
+  }
+
   /**  Map Ptolemy IDs to longitude value in rescaled
   * data set so we can compare them to modern coordinates
   * and approximate a value for Ptolemy's origin of longitude.

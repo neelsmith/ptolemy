@@ -21,7 +21,17 @@ class GeographySpec extends FlatSpec {
   it should "create a Vector of scaled SimplePoints" in {
     assert(geo.scaledPoints.size == expectedRecords)
   }
-  it should "create a Vector of scaled SimplePoints with adjusted latitude" in pending
+  it should "create a Vector of scaled SimplePoints with adjusted latitude" in {
+    assert(geo.scaledLatShiftedPoints.size  == expectedRecords)
+  }
+
+
+  it should "create a map of Ptolemy IDs to rescaled longitude values" in {
+    assert(geo.scaledLonMap.keySet.size == expectedRecords)
+    val expectedLon =  7.92
+    assert(geo.scaledLonMap("pt_ll_1") == expectedLon)
+  }
+
   it should "create a Vector of scaled SimplePoints with adjusted longitude" in pending
   it should "create a Vector of scaled SimplePoints with adjusted longitude and latitude" in pending
   it should "create a CSV representation of full data set" in pending

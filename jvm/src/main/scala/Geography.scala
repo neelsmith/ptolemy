@@ -47,14 +47,18 @@ case class Geography (rawData: Vector[PtolemyString]) {
     simpleHeader(delimiter) + data
   }
 
-  /*
 
 
 
-  def ptolemyLonValues: Map[String, Double] = {
-    val idPlusLonVals = scaledGeo.map{ case (pt, geo) => pt.id  -> geo.y.toDouble }
-    idPlusLonVals.toMap
+
+  def scaledLonMap: Map[String, Double] = {
+    scaledPoints.map( pt => pt.id  -> pt.lon).toMap
   }
+
+
+
+
+  /*
 
   def lonMap : Map[String, Double] = {
     Map.empty[String, Double]

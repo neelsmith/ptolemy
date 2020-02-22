@@ -52,12 +52,20 @@ object GeographicDatum  extends LogSupport {
 
 
   /** Create a new [[SimplePoint]] scaled to a Eratosthenic
-  * value for earth's size.
+  * value for earth's size.  Since Ptolemy's precision
+  * never exceeds 1/12th of a degree, we'll limit ourselves
+  * to 2 decimal points in the resulting Doubles.
   *
   * @param pt Point to rescale.
   */
   def scalePoint(pt: SimplePoint): SimplePoint = {
-    SimplePoint(pt.id, pt.lon * scale, pt.lat * scale)
+
+    val scaledLonRaw = pt.lon * scale
+    val scaledLon = BigDecimal(scaledLonRaw).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+
+    val scaledLatRaw = pt.lat * scale
+    val scaledLat = BigDecimal(scaledLatRaw).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+    SimplePoint(pt.id, scaledLon, scaledLat)
   }
 
   def shiftLatitude(lat: Double): Double = {

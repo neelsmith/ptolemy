@@ -21,5 +21,7 @@ class TeiParserSpec extends FlatSpec {
 
   it should "create a Geography instance" in {
     val geo = TeiParser.geography(root)
+    val expectedRecords = 6288
+    assert(geo.size == expectedRecords)
   }
 }

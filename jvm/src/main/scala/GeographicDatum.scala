@@ -3,7 +3,11 @@ package edu.holycross.shot.ptolemy
 import edu.holycross.shot.pleiades._
 import scala.io.Source
 
-object GeographicDatum  {
+import wvlet.log._
+import wvlet.log.LogFormatter.SourceCodeLogFormatter
+
+
+object GeographicDatum  extends LogSupport {
 
 
   /** Searchable data set of geogrpahic data from Pleiades.*/
@@ -56,16 +60,18 @@ object GeographicDatum  {
     SimplePoint(pt.id, pt.lon * scale, pt.lat * scale)
   }
 
+  def shiftLatitude(lat: Double): Double = {
+    lat + offsetLat
+  }
+
+
   /** Create a new scaled and adjusted latitude
   * value from a raw Ptolemaic value.
   *
   * @rawLat Ptolemy's latitude value for a point.
   */
-  def adjustLatitude(rawLat: Double): Double = {
+  def scaleShiftLatitude(rawLat: Double): Double = {
     (rawLat * scale) + offsetLat
   }
-
-
-
 
 }

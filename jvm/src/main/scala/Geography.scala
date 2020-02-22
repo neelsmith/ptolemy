@@ -5,23 +5,61 @@ import scala.io.Source
 
 case class Geography (rawData: Vector[PtolemyString]) {
 
-/*
-  def simplePoints : Vector[SimplePoint] = rawData.map(pt => SimplePoint(pt))
+  /** Number of records in raw data.*/
+  def size: Int = rawData.size
 
-  def scaledGeo : Vector[SimplePoint] = {
-    simplePoints.map( pt => GeographicDatum.scalePoint(pt))
+  /** Header line for delimited-text output of
+  * for collections of [[SimplePoint]]s.
+  *
+  * @param delimiter Delimiting string for text output
+  */
+  def simpleHeader(delimiter: String = ",") = {
+    Vector("id,lon,lat").mkString(delimiter) + "\n"
   }
+
+  /** Map raw data to [[SimplePoint]]s. */
+  def rawPoints : Vector[SimplePoint] = rawData.map(pt => SimplePoint(pt.id, pt.lon, pt.lat))
+
+  /** Create delimited-text representation of
+  * [[SimplePoint]]s for this data set.
+  *
+  * @param delimiter String to use a plain-text delimiter.
+  */
+  def rawDelimited(delimiter: String = ",") = {
+    val data = rawPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
+    simpleHeader(delimiter) + data
+  }
+
+
+  def scaledPoints : Vector[SimplePoint] = {
+    rawPoints.map( pt => GeographicDatum.scalePoint(pt))
+  }
+  def scaledDelimited(delimiter: String = ",") = {
+    val data = scaledPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
+    simpleHeader(delimiter) + data
+  }
+
+  def scaledLatShiftedPoints : Vector[SimplePoint] = {
+    scaledPoints.map(pt => SimplePoint(pt.id, pt.lon, GeographicDatum.shiftLatitude(pt.lat)))
+  }
+  def scaledLatShiftedDelimited(delimiter: String = ",") = {
+    val data = scaledLatShiftedPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
+    simpleHeader(delimiter) + data
+  }
+
+  /*
+
 
 
   def ptolemyLonValues: Map[String, Double] = {
     val idPlusLonVals = scaledGeo.map{ case (pt, geo) => pt.id  -> geo.y.toDouble }
     idPlusLonVals.toMap
   }
-*/
+
   def lonMap : Map[String, Double] = {
     Map.empty[String, Double]
   }
-  
+
   /** Given a set of Pleiades values and a set
   * of Ptolemy values, find the average difference.
   */
@@ -35,6 +73,6 @@ case class Geography (rawData: Vector[PtolemyString]) {
     val offset = BigDecimal(avgRaw).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
     offset
   }
-
+*/
 
 }

@@ -12,7 +12,7 @@ import wvlet.log.LogFormatter.SourceCodeLogFormatter
 */
 object TeiParser extends LogSupport {
 
-  Logger.setDefaultLogLevel(LogLevel.INFO)
+  Logger.setDefaultLogLevel(LogLevel.DEBUG)
 
   /** Parse a Vector of four TEI <num> elements,
   * and format the resulting lon-lat data as

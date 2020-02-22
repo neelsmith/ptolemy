@@ -9,12 +9,16 @@ val root = XML.load(url)
 import edu.holycross.shot.ptolemy._
 val geo = TeiParser.geography(root)
 
-new PrintWriter("gis-raw.csv"){write(geo.rawDelimited()); close;}
-new PrintWriter("gis-scaled.csv"){write(geo.scaledDelimited()); close;}
-new PrintWriter("gis-scaled-latshifted.csv"){write(geo.scaledLatShiftedDelimited()); close;}
-new PrintWriter("gis-scaled-lonshifted.csv"){write(geo.scaledLonShiftedDelimited()); close;}
+
+new PrintWriter("data/geography-min-adjusted.csv"){write(geo.adjustedPointsDelimited()); close;}
+new PrintWriter("data/geography-min-raw.csv"){write(geo.rawDelimited()); close;}
+new PrintWriter("data/geography-min-scaled-latshifted.csv"){write(geo.scaledLatShiftedDelimited()); close;}
+new PrintWriter("data/geography-min-scaled-lonshifted.csv"){write(geo.scaledLonShiftedDelimited()); close;}
+new PrintWriter("data/geography-min-scaled.csv"){write(geo.scaledDelimited()); close;}
 
 
-new PrintWriter("gis-adjusted.csv"){write(geo.adjustedPointsDelimited()); close;}
-
-new PrintWriter("gis-full.tsv"){write(geo.ptolemyWithAdjustedPointDelimited("\t")); close;}
+// For QGIS, avoid the two columns with Greek numerals including
+// codepoints BMP.  E.g., on this output:
+//
+// cut -f1-6,9-16 gis-full.tsv > usable-in-qgis.tsv
+new PrintWriter("data/geography-full.tsv"){write(geo.ptolemyWithAdjustedPointDelimited("\t")); close;}

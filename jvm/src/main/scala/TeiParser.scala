@@ -28,29 +28,39 @@ object TeiParser extends LogSupport {
     val lonMin = if (nums(1).text.trim.isEmpty) {""} else {
       nums(1).text.toLowerCase + "\""
     }
+
+
     val latDeg = if (nums(2).text.trim.isEmpty) {""} else {
       nums(2).text.toLowerCase + "' "
     }
     val latMin = if (nums(3).text.trim.isEmpty) {""} else {
       nums(3).text.toLowerCase + "\""
     }
-    debug("Fraction values are #" + lonMin + "# and #" + latMin + "#")
-    debug("Make just a lon fraction:  " + MilesianWithFraction(lonMin))
 
 
-    debug("lons are #" + (lonDeg +  lonMin).trim + "#")
-    debug("from #" + lonDeg + "# and #" + lonMin + "#")
+    val numSign : Int =
+      nums(2).attribute("n") match {
+        case None => 1
+        case Some(att) => if (att.text == "NO/T") { -1 } else { 1 }
+      }
+
+    debug("Text values for lat: " + latDeg + latMin + " with numSign " + numSign)
     val lon = MilesianWithFraction((lonDeg + lonMin).trim)
-    debug("lon " + lon)
-    val lat = MilesianWithFraction((latDeg + latMin).trim)
+    val lat = if (latDeg.contains("σημ")) {
+      MilesianWithFraction(MilesianNumeric.oudenString)
+    } else {
+      MilesianWithFraction((latDeg + latMin).trim)
+    }
     debug("lon/lat " + lon + "/" + lat)
     val lonStr = lon.ucode
+
     val latStr = lat.ucode
+
     debug("Created lon/lat pair " + lon + " : " + lat)
     //val lonStr = "X" // if (lon.ucode.isEmpty) { " X "} else { lon.ucode }
     //val latStr = "X"  //if (lat.ucode.isEmpty) { " X "} else { lat.ucode }
     //debug("dispaly strings " + lonStr + " : " + latStr)
-    val delimited = Vector(lonStr,latStr,lon.toDouble, lon.toInt, lon.partialDouble, lat.toDouble, lat.toInt, lat.partialDouble).mkString("#")
+    val delimited = Vector(lonStr,latStr,lon.toDouble,lon.toInt, lon.partialDouble, numSign * lat.toDouble, numSign * lat.toInt, numSign * lat.partialDouble).mkString("#")
     debug("DELIMITED: " + delimited)
     delimited
   }
@@ -210,6 +220,17 @@ object TeiParser extends LogSupport {
     } else {
       lines
     }
+  }
+
+  /** Create a [[Geography]] instance from the parsed
+  * root of an XML edition of the Geography.
+  *
+  * @param root Root element of a TEI edition of the Geography.
+  */
+  def geography(root: scala.xml.Node): Geography = {
+    val dataLines = parseTEI(root, includeHeader = false)
+    val rawData = dataLines.map(ln => PtolemyString(ln))
+    Geography(rawData)
   }
 
 }

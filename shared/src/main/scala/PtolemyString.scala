@@ -23,16 +23,24 @@ case class PtolemyString (
 ) {
 
 
+  def simplePoint: SimplePoint = {
+    SimplePoint(id, lon, lat)
+  }
+
   def cex(delimiter: String = "#"): String = {
     Vector(passage, continent, province, siteType, id, text, lonStr,latStr, lon, lonDeg, lonFract, lat, latDeg, latFract).mkString(delimiter)
   }
+/*
+  def minGeo(delimiter: String = ",") = {
+    Vector(id,lon,lat).mkString(delimiter)
+  }*/
 
   }
 
 object PtolemyString extends LogSupport {
 
 
-  val header = "passage#continent#province#siteType#id#text#lonString#latStr#lon#lonDegree#lonFraction#lat#latDegree#latFract\n"
+  val header = "passage#continent#province#siteType#id#text#lonString#latStr#lon#lonDegree#lonFraction#lat#latDegree#latFract"
 
   def apply(line : String) : PtolemyString = {
     val cols = line.trim.split("#")

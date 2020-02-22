@@ -3,7 +3,12 @@ package edu.holycross.shot.ptolemy
 import edu.holycross.shot.pleiades._
 import scala.io.Source
 
-case class Geography (rawData: Vector[PtolemyString]) {
+
+import wvlet.log._
+import wvlet.log.LogFormatter.SourceCodeLogFormatter
+
+
+case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
 
   /** Number of records in raw data.*/
   def size: Int = rawData.size
@@ -58,25 +63,33 @@ case class Geography (rawData: Vector[PtolemyString]) {
 
 
 
-  /*
 
-  def lonMap : Map[String, Double] = {
-    Map.empty[String, Double]
-  }
 
   /** Given a set of Pleiades values and a set
   * of Ptolemy values, find the average difference.
   */
   def offsetLon: Double  =
     {
-    val diffs = for (k <- GeographicDatum.pleiadesLonForPtolemy.keySet) yield {
-      val diff = GeographicDatum.pleiadesLonForPtolemy(k)  - lonMap(k)
+
+
+    info("Computing longitude offset: retrieving pleiades data")
+    info("Please be patient...")
+    val pl = GeographicDatum.pleiadesLonForPtolemy
+    debug("Retrieved Pleiades data")
+    debug("Now cycle keyset of " + pl.keySet.size + " entries.")
+    val pleiadesDataMap = GeographicDatum.pleiadesLonForPtolemy
+    val diffs = for (k <- pl.keySet) yield {
+      debug(k)
+      val diff = pleiadesDataMap(k)  - scaledLonMap(k)
       diff
     }
     val avgRaw = diffs.sum / diffs.size
     val offset = BigDecimal(avgRaw).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+    info("Done retrieving pleiades data.")
     offset
+
+
   }
-*/
+
 
 }

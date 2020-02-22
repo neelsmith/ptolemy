@@ -46,6 +46,7 @@ object GeographicDatum  extends LogSupport {
 
     // Create map of Ptolemy IDs to Pleiades longitude values:
     val pleiadesLonValues = pts.map(p => p._1 -> p._3.get.y.toDouble)
+    debug("Created map of " + pleiadesLonValues.size + " pleiades longitude values.")
     pleiadesLonValues.toMap
   }
 

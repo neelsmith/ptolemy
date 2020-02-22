@@ -39,7 +39,11 @@ class GeographySpec extends FlatSpec {
   }
 
 
-  it should "create a Vector of scaled SimplePoints with adjusted longitude" in pending
-  it should "create a Vector of scaled SimplePoints with adjusted longitude and latitude" in pending
+  it should "create a Vector of scaled SimplePoints with adjusted longitude" in {
+    assert(geo.scaledLonShiftedPoints.size  == expectedRecords)
+  }
+  it should "create a Vector of scaled SimplePoints with adjusted longitude and latitude" in {
+    assert(geo.adjustedPoints.size  == expectedRecords)
+  }
   it should "create a CSV representation of full data set" in pending
 }

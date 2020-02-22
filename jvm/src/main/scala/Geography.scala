@@ -53,29 +53,41 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
   }
 
 
-
-
-
-  def scaledLonMap: Map[String, Double] = {
-    scaledPoints.map( pt => pt.id  -> pt.lon).toMap
+  def scaledLonShiftedPoints : Vector[SimplePoint] = {
+    val offset : Double = offsetLon
+    scaledPoints.map(pt => SimplePoint(pt.id, pt.lon + offset, pt.lat))
+  }
+  def scaledLonShiftedDelimited(delimiter: String = ",") = {
+    val data = scaledLonShiftedPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
+    simpleHeader(delimiter) + data
   }
 
 
+  def adjustedPoints : Vector[SimplePoint] = {
+    val offset : Double = offsetLon
+    scaledPoints.map(pt => SimplePoint(pt.id, pt.lon + offset, GeographicDatum.shiftLatitude(pt.lat)))
+  }
+  def adjustedPointsDelimited(delimiter: String = ",") = {
+    val data = adjustedPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
+    simpleHeader(delimiter) + data
+  }
 
-
-
+  /**  Map Ptolemy IDs to longitude value in rescaled
+  * data set so we can compare them to modern coordinates
+  * and approximate a value for Ptolemy's origin of longitude.
+  */
+  def scaledLonMap: Map[String, Double] = {
+    scaledPoints.map( pt => pt.id  -> pt.lon).toMap
+  }
 
   /** Given a set of Pleiades values and a set
   * of Ptolemy values, find the average difference.
   */
   def offsetLon: Double  =
     {
-
-
     info("Computing longitude offset: retrieving pleiades data")
     info("Please be patient...")
     val pl = GeographicDatum.pleiadesLonForPtolemy
-    debug("Retrieved Pleiades data")
     debug("Now cycle keyset of " + pl.keySet.size + " entries.")
     val pleiadesDataMap = GeographicDatum.pleiadesLonForPtolemy
     val diffs = for (k <- pl.keySet) yield {
@@ -87,8 +99,6 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     val offset = BigDecimal(avgRaw).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
     info("Done retrieving pleiades data.")
     offset
-
-
   }
 
 

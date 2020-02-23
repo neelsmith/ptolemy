@@ -12,7 +12,7 @@ lazy val crossed = crossProject.in(file(".")).
 
       name := "ptolemy",
       organization := "edu.holycross.shot",
-      version := "1.2.1",
+      version := "1.5.0",
       scalaVersion := "2.12.4",
       licenses += ("GPL-3.0",url("https://opensource.org/licenses/gpl-3.0.html")),
       resolvers += Resolver.jcenterRepo,
@@ -24,7 +24,8 @@ lazy val crossed = crossProject.in(file(".")).
 
         "edu.holycross.shot.cite" %%% "xcite" % "4.0.2",
         "edu.holycross.shot" %%% "histoutils" % "2.2.0",
-        "edu.holycross.shot" %%% "greek" % "4.0.1"
+        "edu.holycross.shot" %%% "greek" % "4.0.2",
+        "edu.holycross.shot" %%% "pleiades" % "1.1.0"
 
       )
 
@@ -33,6 +34,8 @@ lazy val crossed = crossProject.in(file(".")).
 
       tutTargetDirectory := file("docs"),
       tutSourceDirectory := file("tut"),
+      resolvers += "beta" at "http://beta.hpcc.uh.edu/nexus/content/groups/public",
+      libraryDependencies += "edu.unc.epidoc" % "transcoder" % "1.2-SNAPSHOT",
       crossScalaVersions := supportedScalaVersions
 
     ).

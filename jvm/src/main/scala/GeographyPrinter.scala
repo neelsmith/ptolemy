@@ -8,7 +8,7 @@ import wvlet.log.LogFormatter.SourceCodeLogFormatter
 
 
 object GeographyPrinter extends LogSupport {
-  Logger.setDefaultLogLevel(LogLevel.DEBUG)
+  //Logger.setDefaultLogLevel(LogLevel.DEBUG)
   val urlBase = CtsUrn("urn:cts:greekLit:tlg0363.tlg009.episteme:")
 
   def sectionRoots(docRoot: scala.xml.Node) = {

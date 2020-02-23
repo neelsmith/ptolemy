@@ -12,7 +12,7 @@ import wvlet.log.LogFormatter.SourceCodeLogFormatter
 * XML source.
 */
 object TeiParser extends LogSupport {
-  Logger.setDefaultLogLevel(LogLevel.DEBUG)
+  //Logger.setDefaultLogLevel(LogLevel.DEBUG)
 
   val transliterator = new TransCoder("Unicode", "GreekXLit")
 

@@ -1,6 +1,7 @@
 package edu.holycross.shot.ptolemy
 
 import edu.holycross.shot.greek._
+import edu.unc.epidoc.transcoder.TransCoder
 
 import wvlet.log._
 import wvlet.log.LogFormatter.SourceCodeLogFormatter
@@ -11,8 +12,11 @@ import wvlet.log.LogFormatter.SourceCodeLogFormatter
 * XML source.
 */
 object TeiParser extends LogSupport {
+  Logger.setDefaultLogLevel(LogLevel.DEBUG)
 
-  Logger.setDefaultLogLevel(LogLevel.INFO)
+  val transliterator = new TransCoder("Unicode", "GreekXLit")
+
+
 
   /** Parse a Vector of four TEI <num> elements,
   * and format the resulting lon-lat data as
@@ -89,7 +93,17 @@ object TeiParser extends LogSupport {
           val measures = (n \ "measure" \ "num").toVector
           val id = nd.attribute("key").get.text
           debug("Parse a place with id " + id ) //+ " from measures " + measures)
-          val res = id + "#" + nd.text.replaceAll("[\\s]+", " ")
+
+          val ucodeName = nd.text.replaceAll("[\\s]+", " ")
+          val xlitName = try {
+            transliterator.getString(ucodeName).replaceAll("#","?")
+          } catch {
+            case t: Throwable => {
+              error("Epidoc transcoder failed on " + ucodeName)
+              ""
+            }
+          }
+          val res = id + "#" + ucodeName + s" (${xlitName})"
           val lldata = if (measures.size != 4) {
             error(s"ERROR: ${measures.size} nums in  " + res)
             ""

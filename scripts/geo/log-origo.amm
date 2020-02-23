@@ -1,0 +1,64 @@
+// 1. Add maven repository where we can find our libraries
+val myBT = coursierapi.MavenRepository.of("https://dl.bintray.com/neelsmith/maven")
+interp.repositories() ++= Seq(myBT)
+
+// 2. Make libraries available with `$ivy` imports:
+import $ivy.`edu.holycross.shot::ptolemy:1.2.1`
+import $ivy.`edu.holycross.shot::pleiades:1.1.0`
+
+import scala.xml._
+
+val url = "https://raw.githubusercontent.com/neelsmith/ptolemy/master/tei/tlg0363.tlg009.epist03-p5-u8.xml"
+val root = XML.load(url)
+
+import edu.holycross.shot.ptolemy._
+
+val delimited = TeiParser.parseTEI(root, false)
+val ptolStrings = delimited.map(ln => PtolemyString(ln))
+
+import edu.holycross.shot.pleiades._
+val ratio = 18.0 / 25.0
+
+val scaled = ptolStrings.map( pt => (GeoPoint(pt.lon * ratio, pt.lat * ratio  ) ))
+val scaledGeo = ptolStrings zip scaled
+
+import $ivy.`edu.holycross.shot::pleiades:1.1.0`
+import edu.holycross.shot.pleiades._
+
+val pleiades = PleiadesDataSource.loadFromUrls()
+
+import scala.io.Source
+val url = "https://raw.githubusercontent.com/neelsmith/ptolemy/master/data/ptolemy2pleiades.csv"
+val lines = Source.fromURL(url).getLines.toVector
+
+val ptOpts = for (ln <- lines.tail) yield {
+  val cols = ln.split(",")
+  val pl = pleiades.lookup(BigDecimal(cols(2)))
+  (cols(0), cols(1), pl.get.pointOption)
+}
+val pts = ptOpts.filter(_._3 != None)
+
+// Create map of Ptolemy IDs to Pleiades longitude values:
+val pleiadesLonValues = pts.map(p => p._1 -> p._3.get.y.toDouble)
+val pleiadesLonMap = pleiadesLonValues.toMap
+
+// create map of ptolemy IDs to ptolemy's lon. value
+val ptolemyLonValues = scaledGeo.map{ case (pt, geo) => pt.id  -> geo.y.toDouble }
+val ptolemyLonMap =  ptolemyLonValues.toMap
+
+
+val diffs = for (k <- pleiadesLonMap.keySet) yield {
+  val diff = pleiadesLonMap(k)  - ptolemyLonMap(k)
+  /*
+  println(pleiadesLonMap(k) + " - " + ptolemyLonMap(k) + " = " + diff)
+  val scaled = scaledGeo.filter{ case (pt, geo) => pt.id == k }
+
+  val ptStr = scaled(0)._1
+  println(diff + " from " + ptStr.id + ", " + ptStr.text)
+  */
+  diff
+}
+val avg = diffs.sum / diffs.size
+println("AVG = " + avg)
+
+ptolStrings

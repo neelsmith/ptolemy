@@ -84,6 +84,12 @@ class ItemParserSpec extends FlatSpec {
     assert(delimited.split("#").size == expectedColumns)
   }
 
+  it should "transliterate site names" in {
+    val item = XML.loadString(noFractionsXml)
+    val delimited = TeiParser.parseItem(item)
+    println("XLIT: " + delimited)
+  }
+
 
   it should "parse an <item> element including numbers elsewhere in the text of the item" in {
     val item = XML.loadString(interiorNumber)

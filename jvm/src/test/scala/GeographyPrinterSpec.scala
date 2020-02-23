@@ -10,6 +10,37 @@ class GeographyPrinterSpec extends FlatSpec {
   val docRoot = XML.loadFile(f)
   val expectedSections = 1940
 
+  val mixedKids = """  <div n='3'><p > Πόλεις δὲ εἰσὶν ἐν αὐτῇ ὑπὸ μὲν τὸν Δανούβιον
+      ποταμὸν</p>
+  <list  type='simple'>
+      <item >
+          <name  key='pt_ll_976' type='place'>Ἀρελάπη</name>
+          <measure  type='llpair'>
+              <num  type='cardinal'>λε</num>
+              <num  type='fraction'/>
+              <num  type='cardinal'>μζ</num>
+              <num  type='fraction'/>
+          </measure>
+      </item>
+      <item >
+          <name  key='pt_ll_977' type='place'>Κλαυδιούιον</name>
+          <measure  type='llpair'>
+              <num  type='cardinal'>λϚ</num>
+              <num  type='fraction'/>
+              <num  type='cardinal'>μϚ</num>
+              <num  type='fraction'>𐅷 </num>
+          </measure>
+      </item>
+      <item > Ὑπὸ δὲ ταύτας <name  key='pt_ll_978' type='place'>Γαμαυόδουρον</name>
+          <measure  type='llpair'>
+              <num  type='cardinal'>λδ</num>
+              <num  type='fraction'>𐅷 </num>
+              <num  type='cardinal'>μϚ</num>
+              <num  type='fraction'>𐅷 </num>
+          </measure>
+      </item>
+      </list></div>
+"""
   val childP = """<div><p> Ἡ γεωγραφία μίμησίς ἐστι διὰ γραφῆς τοῦ κατειλημμένου τῆς
         γῆς μέρους ὅλου μετὰ τῶν ὡς ἐπίπαν αὐτῷ συνημμένων: καὶ
         διαφέρει τῆς χωρογραφίας, ἐπειδήπερ αὕτη μὲν ἀποτεμνομένη
@@ -65,11 +96,19 @@ class GeographyPrinterSpec extends FlatSpec {
   it should "extract TEI <p> content" in {
     val  pElem = XML.loadString(childP)
     val pg =  GeographyPrinter.mdForNode(pElem)
-    println("PAGE IS : " + pg)
+    println("para : \n" + pg)
   }
   it should "format a page with <p> content" in {
     val page = GeographyPrinter.mdPagesForDocument(XML.loadString(paraDoc))
     println("PAGE: \n\n" + page(0))
+  }
+
+  it should "format a section mixing paras and lists" in {
+
+    val  mixedDiv = XML.loadString(mixedKids)
+    val md =  GeographyPrinter.mdForNode(mixedDiv)
+    println("MIXED CONTENT : \n" + md)
+
   }
 
 

@@ -1,0 +1,34 @@
+// 1. Add maven repository where we can find our libraries
+val myBT = coursierapi.MavenRepository.of("https://dl.bintray.com/neelsmith/maven")
+interp.repositories() ++= Seq(myBT)
+
+// 2. Make libraries available with `$ivy` imports:
+import $ivy.`edu.holycross.shot::ptolemy:1.3.0`
+
+import scala.xml._
+
+val url = "https://raw.githubusercontent.com/neelsmith/ptolemy/master/tei/tlg0363.tlg009.epist03-p5-u8.xml"
+val root = XML.load(url)
+
+import edu.holycross.shot.ptolemy._
+
+val delimited = TeiParser.parseTEI(root, false)
+val ptolStrings = delimited.map(ln => PtolemyString(ln))
+
+
+
+
+import edu.holycross.shot.pleiades._
+
+val ratio = 18.0 / 25.0
+val scaled = ptolStrings.map( pt => (GeoPoint(pt.lon * ratio, pt.lat * ratio  ) ))
+val scaledGeo = ptolStrings zip scaled
+
+import $ivy.`edu.holycross.shot::pleiades:1.1.0`
+val pleiades = PleiadesDataSource.loadFromUrls()
+val pt = pleiades.lookup(BigDecimal(814706)).get.pointOption.get
+
+pt.x
+pt.y
+
+scaledGeo(3)

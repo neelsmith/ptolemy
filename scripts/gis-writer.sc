@@ -4,7 +4,9 @@
 import java.io.PrintWriter
 import scala.xml._
 val url = "https://raw.githubusercontent.com/neelsmith/ptolemy/master/tei/tlg0363.tlg009.epist03-p5-u8.xml"
-val root = XML.load(url)
+//val root = XML.load(url)
+val fileName = "tei/tlg0363.tlg009.epist03-p5-u8.xml"
+val root = XML.loadFile(fileName)
 
 import edu.holycross.shot.ptolemy._
 val geo = TeiParser.geography(root)
@@ -20,5 +22,5 @@ new PrintWriter("data/geography-min-scaled.csv"){write(geo.scaledDelimited()); c
 // For QGIS, avoid the two columns with Greek numerals including
 // codepoints BMP.  E.g., on this output:
 //
-// cut -f1-6,9-16 gis-full.tsv > usable-in-qgis.tsv
+// cut -f1-6,9-16 geography-full.tsv > usable-in-qgis.tsv
 new PrintWriter("data/geography-full.tsv"){write(geo.ptolemyWithAdjustedPointDelimited("\t")); close;}

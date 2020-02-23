@@ -6,7 +6,7 @@ import wvlet.log.LogFormatter.SourceCodeLogFormatter
 import scala.math.BigDecimal.RoundingMode
 
 case class Sexagesimal(int: Int, parts: Vector[Int]) extends LogSupport {
-  Logger.setDefaultLogLevel(LogLevel.INFO)
+  //Logger.setDefaultLogLevel(LogLevel.INFO)
 
   def decimal(scale: Int = 4) = {
     int + decimalFract(scale = scale)

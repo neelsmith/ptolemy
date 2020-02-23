@@ -1,4 +1,4 @@
-# ptolemy
+# `ptolemy`
 
 Implementations of some data sets and functions in extant works of Claudius Ptolemy.
 

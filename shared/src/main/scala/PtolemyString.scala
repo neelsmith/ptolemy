@@ -39,7 +39,6 @@ case class PtolemyString (
 
 object PtolemyString extends LogSupport {
 
-
   val header = "passage#continent#province#siteType#id#text#lonString#latStr#lon#lonDegree#lonFraction#lat#latDegree#latFract"
 
   def apply(line : String) : PtolemyString = {
@@ -63,8 +62,11 @@ object PtolemyString extends LogSupport {
         case t: Throwable => -1.0
       }
     }
+    val passageUrl = "http://neelsmith.info/current-projects/geography/ptolemy-geography/geography-" + cols(0) + "/"
+    //val xlit = LiteraryGreekString(cols(5))
+
     PtolemyString(
-      cols(0),
+      passageUrl,
       cols(1),
       cols(2),
       cols(3),

@@ -5,6 +5,9 @@ import edu.holycross.shot.greek._
 import wvlet.log._
 import wvlet.log.LogFormatter.SourceCodeLogFormatter
 
+import edu.unc.epidoc.transcoder.TransCoder
+
+
 case class PtolemyString (
   passage: String,
   continent: String,
@@ -22,6 +25,7 @@ case class PtolemyString (
   latFract: String
 ) {
 
+  lazy val xliterated = TeiParser.transliterator.getString(text)
 
   def simplePoint: SimplePoint = {
     SimplePoint(id, lon, lat)
@@ -30,12 +34,21 @@ case class PtolemyString (
   def delimited(delimiter: String = "#"): String = {
     Vector(passage, continent, province, siteType, id, text, lonStr,latStr, lon, lonDeg, lonFract, lat, latDeg, latFract).mkString(delimiter)
   }
-/*
-  def minGeo(delimiter: String = ",") = {
-    Vector(id,lon,lat).mkString(delimiter)
-  }*/
 
+  def kml : String= {
+    val ref = passage.replaceFirst("http://neelsmith.info/current-projects/geography/ptolemy-geography/geography-", "").replaceFirst("/","")
+    "<Placemark>" +
+    s"<name>${text}</name>" +
+    "<description>" + text + ", Geography <a href='" + passage+ "'>" +
+    ref +
+    "</a></description>" +
+      "<Point><coordinates>" +
+      lon + "," + lat + ",0" +
+      "</coordinates></Point>" +
+      "</Placemark>"
   }
+
+}
 
 object PtolemyString extends LogSupport {
 

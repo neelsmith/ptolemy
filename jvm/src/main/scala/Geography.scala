@@ -13,6 +13,27 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
   /** Number of records in raw data.*/
   def size: Int = rawData.size
 
+
+  val kmlHeader = {
+    """<Document>
+    <name>Transformed data from Geography of Claudius Ptolemy</name>
+    <Style id='cityPlacemark'>
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pal4/icon24.png</href>
+        </Icon>
+        <color>FFFF78F0</color>
+        <colorMode>normal</colorMode>
+      </IconStyle>
+      <LabelStyle>
+        <scale>0.5</scale>
+      </LabelStyle>
+    </Style>"""
+  }
+
+  val kmlCloser = "</Document>"
+
+
   /** Header line for delimited-text output of
   * for collections of [[SimplePoint]]s.
   *
@@ -34,7 +55,9 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     val data = rawPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
     simpleHeader(delimiter) + data
   }
-
+  def rawKml : String = {
+    kmlHeader + rawData.map(pt => pt.kml).mkString("\n") + kmlCloser
+  }
 
   def scaledPoints : Vector[SimplePoint] = {
     rawPoints.map( pt => GeographicDatum.scalePoint(pt))
@@ -43,6 +66,9 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     val data = scaledPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
     simpleHeader(delimiter) + data
   }
+  /*def scaledKml : String = {
+    kmlHeader + scaledPoints.map(pt => pt.kml).mkString("\n") + kmlCloser
+  }*/
 
   def scaledLatShiftedPoints : Vector[SimplePoint] = {
     scaledPoints.map(pt => SimplePoint(pt.id, pt.lon, GeographicDatum.shiftLatitude(pt.lat)))
@@ -51,6 +77,9 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     val data = scaledLatShiftedPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
     simpleHeader(delimiter) + data
   }
+  /*def scaledLatShiftedKml : String = {
+    kmlHeader + scaledLatShiftedPoints.map(pt => pt.kml).mkString("\n") + kmlCloser
+  }*/
 
 
   def scaledLonShiftedPoints : Vector[SimplePoint] = {
@@ -61,7 +90,9 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     val data = scaledLonShiftedPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
     simpleHeader(delimiter) + data
   }
-
+/*  def scaledLonShiftedKml : String = {
+    kmlHeader + scaledLonShiftedPoints.map(pt => pt.kml).mkString("\n") + kmlCloser
+  }*/
 
   def adjustedPoints : Vector[SimplePoint] = {
     val offset : Double = offsetLon
@@ -70,6 +101,9 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
   def adjustedPointsDelimited(delimiter: String = ",") = {
     val data = adjustedPoints.map(pt => pt.delimited(delimiter)).mkString("\n")
     simpleHeader(delimiter) + data
+  }
+  def adjustedKml : String = {
+    kmlHeader + adjustedGeo.map(pt => pt.kml).mkString("\n") + kmlCloser
   }
 
   def fullHeader(delimiter: String = "#"): String =  {
@@ -94,7 +128,7 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
   }
 
   def ptolemyWithAdjustedPointDelimited(delimiter: String = "#") = {
-   
+
     val zipped = rawData zip adjustedPoints
 
     val textLines = zipped.map{ case (raw, adj) =>
@@ -130,6 +164,29 @@ case class Geography (rawData: Vector[PtolemyString]) extends LogSupport {
     val offset = BigDecimal(avgRaw).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
     info("Done retrieving pleiades data.")
     offset
+  }
+
+  def adjustedGeo : Vector[PtolemyString] = {
+    val zipped = rawData zip adjustedPoints
+    val textLines = zipped.map{ case (raw, adj) =>
+      PtolemyString(
+            raw.passage,
+            raw.continent,
+            raw.province,
+            raw.siteType,
+            raw.id,
+            raw.text,
+            raw.lonStr,
+            raw.latStr,
+            adj.lon,
+            raw.lonDeg,
+            raw.lonFract,
+            adj.lat,
+            raw.latDeg,
+            raw.latFract
+      )
+    }
+    textLines
   }
 
 
